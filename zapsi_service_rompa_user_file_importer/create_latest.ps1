@@ -1,3 +1,3 @@
-docker rmi -f petrjahoda/optimontfisimporter:latest
-docker build -t petrjahoda/optimontfisimporter:latest .
-docker push petrjahoda/optimontfisimporter:latest
+docker rmi -f petrjahoda/rompauserfileimporter:latest
+docker build -t petrjahoda/rompauserfileimporter:latest .
+docker push petrjahoda/rompauserfileimporter:latest

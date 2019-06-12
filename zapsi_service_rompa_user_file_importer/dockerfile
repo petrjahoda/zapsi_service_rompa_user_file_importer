@@ -5,4 +5,4 @@ RUN apt-get update && apt-get install nano -y && apt-get install vim -y
 
 WORKDIR /publish
 COPY /publish /publish
-ENTRYPOINT dotnet zapsi_service_optimont_importer.dll
+ENTRYPOINT dotnet zapsi_service_rompa_user_file_importer.dll

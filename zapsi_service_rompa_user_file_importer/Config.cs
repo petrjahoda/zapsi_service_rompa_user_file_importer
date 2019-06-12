@@ -1,4 +1,4 @@
-namespace zapsi_service_optimont_importer {
+namespace zapsi_service_rompa_user_file_importer {
     public class Config {
         public string Ipaddress { get; set; }
         public string Database { get; set; }
@@ -14,6 +14,7 @@ namespace zapsi_service_optimont_importer {
         public string SmtpUsername { get; set; }
         public string SmtpPassword { get; set; }
         public string SmtpPort { get; set; }
+        
         public  Config() {
             Ipaddress = "zapsidatabase";
             Port = "3306";
