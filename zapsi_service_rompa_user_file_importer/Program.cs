@@ -92,7 +92,7 @@ namespace zapsi_service_rompa_user_file_importer {
 
         private static void TransferUsers(ILogger logger) {
             LogInfo($"[ MAIN ] --INF-- Downloading users from file", logger);
-            var usersFromFile = DownloadActualUsersFromFile();
+            var usersFromFile = DownloadActualUsersFromFile(logger);
             LogInfo($"[ MAIN ] --INF-- Downloading users from Zapsi", logger);
             var zapsiUsers = DownloadActualUsersFromZapsi(logger);
             LogInfo($"[ MAIN ] --INF-- Comparing users " + usersFromFile.Count() + "-" + zapsiUsers.Count(), logger);
@@ -210,23 +210,28 @@ namespace zapsi_service_rompa_user_file_importer {
             return userOidList;
         }
 
-        private static List<User> DownloadActualUsersFromFile() {
+        private static List<User> DownloadActualUsersFromFile(ILogger logger) {
             var users = new List<User>();
-
-            using (var reader = new StreamReader(@"data/DOCHZARV.CSV", Encoding.GetEncoding(1250))) {
-                while (!reader.EndOfStream) {
-                    var line = reader.ReadLine();
-                    if (line != null) {
-                        var values = line.Split(',');
-                        var user = new User();
-                        user.Oid = Convert.ToInt32(values[0]);
-                        user.FirstName = Convert.ToString(values[4]);
-                        user.Surname = Convert.ToString(values[5]);
-                        var rfid = Convert.ToString(values[6]);
-                        user.RFID = rfid.Substring(0, rfid.Length - 1);
-                        users.Add(user);
+            try {
+                using (var reader = new StreamReader(@"data/DOCHZARV.CSV", Encoding.GetEncoding(1250))) {
+                    while (!reader.EndOfStream) {
+                        var line = reader.ReadLine();
+                        if (line != null) {
+                            var values = line.Split(',');
+                            var user = new User();
+                            user.Oid = Convert.ToInt32(values[0]);
+                            user.FirstName = Convert.ToString(values[4]);
+                            user.Surname = Convert.ToString(values[5]);
+                            var rfid = Convert.ToString(values[6]);
+                            user.RFID = rfid.Substring(0, rfid.Length - 1);
+                            users.Add(user);
+                        }
                     }
                 }
+
+            } catch (Exception e) {
+                LogError("[ MAIN ] --ERR-- Problem with file: " + e.Message, logger);
+
             }
             return users;
         }
