@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 namespace zapsi_service_rompa_user_file_importer {
     class Program {
         public static readonly Encoding AnsiEncoding = CodePagesEncodingProvider.Instance.GetEncoding(1250);
-        private const string BuildDate = "2019.2.3.12";
+        private const string BuildDate = "2019.2.3.14";
         private const string DataFolder = "Logs";
         private const string RedColor = "\u001b[31;1m";
         private const string YellowColor = "\u001b[33;1m";
@@ -223,17 +223,40 @@ namespace zapsi_service_rompa_user_file_importer {
                             user.FirstName = Convert.ToString(values[4]);
                             user.Surname = Convert.ToString(values[5]);
                             var rfid = Convert.ToString(values[6]);
-                            user.RFID = rfid.Substring(0, rfid.Length - 1);
+                            if (rfid.Length > 2) {
+                                user.RFID = MakeConversion(rfid.Substring(0, rfid.Length - 1));
+                            } else {
+                                user.RFID = "0";
+                            }
+
                             users.Add(user);
                         }
                     }
                 }
-
             } catch (Exception e) {
                 LogError("[ MAIN ] --ERR-- Problem with file: " + e.Message, logger);
-
             }
             return users;
+        }
+
+        private static string MakeConversion(string originalData) {
+            var shortenedData = originalData.Substring(originalData.Length - 6).ToUpper();
+            var convertedDataAsHex = ConvertHexData(shortenedData);
+            var convertedDataAsDecimal = Convert.ToInt64(convertedDataAsHex, 16);
+            var result = Convert.ToString(convertedDataAsDecimal);
+            return result;
+        }
+
+        private static string ConvertHexData(string hexData) {
+            const string originalData = "0123456789ABCDEF";
+            const string replacementData = "084C2A6E195D3B7F";
+            var finalString = string.Empty;
+            foreach (var position in hexData) {
+                var startIndex = originalData.IndexOf(position);
+                if (startIndex >= 0)
+                    finalString += replacementData.Substring(startIndex, 1);
+            }
+            return finalString;
         }
 
         private static void RunTimer(System.Timers.Timer timer) {
