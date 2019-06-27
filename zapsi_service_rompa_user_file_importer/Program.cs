@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 namespace zapsi_service_rompa_user_file_importer {
     class Program {
         public static readonly Encoding AnsiEncoding = CodePagesEncodingProvider.Instance.GetEncoding(1250);
-        private const string BuildDate = "2019.2.3.14";
+        private const string BuildDate = "2019.2.3.27";
         private const string DataFolder = "Logs";
         private const string RedColor = "\u001b[31;1m";
         private const string YellowColor = "\u001b[33;1m";
@@ -240,7 +240,7 @@ namespace zapsi_service_rompa_user_file_importer {
         }
 
         private static string MakeConversion(string originalData) {
-            var shortenedData = originalData.Substring(originalData.Length - 6).ToUpper();
+            var shortenedData = originalData.Substring(originalData.Length - 8).ToUpper();
             var convertedDataAsHex = ConvertHexData(shortenedData);
             var convertedDataAsDecimal = Convert.ToInt64(convertedDataAsHex, 16);
             var result = Convert.ToString(convertedDataAsDecimal);
