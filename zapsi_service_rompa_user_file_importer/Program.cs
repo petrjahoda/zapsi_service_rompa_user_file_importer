@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 namespace zapsi_service_rompa_user_file_importer {
     class Program {
         public static readonly Encoding AnsiEncoding = CodePagesEncodingProvider.Instance.GetEncoding(1250);
-        private const string BuildDate = "2019.2.3.27";
+        private const string BuildDate = "2019.3.1.2";
         private const string DataFolder = "Logs";
         private const string RedColor = "\u001b[31;1m";
         private const string YellowColor = "\u001b[33;1m";
@@ -96,12 +96,14 @@ namespace zapsi_service_rompa_user_file_importer {
             LogInfo($"[ MAIN ] --INF-- Downloading users from Zapsi", logger);
             var zapsiUsers = DownloadActualUsersFromZapsi(logger);
             LogInfo($"[ MAIN ] --INF-- Comparing users " + usersFromFile.Count() + "-" + zapsiUsers.Count(), logger);
-            RemoveRfidFromUsersInZapsi(logger);
-            foreach (var user in usersFromFile) {
-                if (zapsiUsers.Contains(user.Oid.ToString())) {
-                    UpdateUserInZapsi(user, logger);
-                } else {
-                    CreateNewUserInZapsi(user, logger);
+            if (usersFromFile.Count > 1) {
+                RemoveRfidFromUsersInZapsi(logger);
+                foreach (var user in usersFromFile) {
+                    if (zapsiUsers.Contains(user.Oid.ToString())) {
+                        UpdateUserInZapsi(user, logger);
+                    } else {
+                        CreateNewUserInZapsi(user, logger);
+                    }
                 }
             }
         }
@@ -214,15 +216,18 @@ namespace zapsi_service_rompa_user_file_importer {
             var users = new List<User>();
             try {
                 using (var reader = new StreamReader(@"data/DOCHZARV.CSV", Encoding.GetEncoding(1250))) {
+                    Console.WriteLine("1");
                     while (!reader.EndOfStream) {
+                        Console.WriteLine("2");
                         var line = reader.ReadLine();
+                        Console.WriteLine(line);
                         if (line != null) {
                             var values = line.Split(',');
                             var user = new User();
                             user.Oid = Convert.ToInt32(values[0]);
-                            user.FirstName = Convert.ToString(values[4]);
-                            user.Surname = Convert.ToString(values[5]);
-                            var rfid = Convert.ToString(values[6]);
+                            user.FirstName = Convert.ToString(values[5]);
+                            user.Surname = Convert.ToString(values[6]);
+                            var rfid = Convert.ToString(values[7]);
                             if (rfid.Length > 2) {
                                 user.RFID = MakeConversion(rfid.Substring(0, rfid.Length - 1));
                             } else {
