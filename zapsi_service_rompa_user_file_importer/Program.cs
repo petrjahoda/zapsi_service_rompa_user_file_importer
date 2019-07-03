@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 namespace zapsi_service_rompa_user_file_importer {
     class Program {
         public static readonly Encoding AnsiEncoding = CodePagesEncodingProvider.Instance.GetEncoding(1250);
-        private const string BuildDate = "2019.3.1.2";
+        private const string BuildDate = "2019.3.1.3";
         private const string DataFolder = "Logs";
         private const string RedColor = "\u001b[31;1m";
         private const string YellowColor = "\u001b[33;1m";
@@ -163,7 +163,7 @@ namespace zapsi_service_rompa_user_file_importer {
             try {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = $"UPDATE zapsi2.user set zapsi2.user.Rfid = {user.RFID} where Login = {user.Oid}";
+                command.CommandText = $"UPDATE zapsi2.user set zapsi2.user.Rfid = '{user.RFID}' where Login = '{user.Oid}'";
 
                 try {
                     command.ExecuteNonQuery();
