@@ -137,7 +137,7 @@ namespace zapsi_service_rompa_user_file_importer {
                 var command = connection.CreateCommand();
                 command.CommandText =
                     $"INSERT INTO `zapsi2`.`user` (`Login`, `Password`, `Name`, `FirstName`, `Rfid`, `Barcode`, `Pin`, `Function`, `UserTypeID`, `Email`, `Phone`, `UserRoleID`)" +
-                    $" VALUES ('{user.Oid}', null, {user.Surname}, {user.FirstName}, {user.RFID}, null, null, null, null, null, null, 2);";
+                    $" VALUES ('{user.Oid}', null, {user.Surname}, {user.FirstName}, {user.RFID}, null, null, null, 1, null, null, 2);";
                 try {
                     command.ExecuteNonQuery();
                     LogInfo($"[ {user.FirstName} {user.Surname} ] --INF-- Added from file to Zapsi", logger);
